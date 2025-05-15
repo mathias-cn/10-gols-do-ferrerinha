@@ -3,24 +3,24 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <button ref="audioButton" class="z-10 fixed bottom-2 right-2 w-10 h-10 bg-white rounded-md flex items-center justify-center">
+    <button ref="audioButton" class="z-10 fixed bottom-4 right-4 w-10 h-10 bg-white rounded-md flex items-center justify-center">
       <Icon :name="audioIcon" class="text-black text-2xl" />
     </button>
+    <audio ref="audio" src="audio-neto.mp3" loop preload="auto" autoplay="true" />
   </div>
 </template>
 
 <script setup lang="ts">
 const audioButton = ref<HTMLButtonElement | null>(null);
 const audio = ref<HTMLAudioElement | null>(null);
-const isPlaying = ref(false);
+const isPlaying = ref(true);
 
 const audioIcon = computed(() => {
   return isPlaying.value ? 'mdi:volume-high' : 'mdi:volume-off';
 })
 
 onMounted(() => {
-  audio.value = new Audio('audio-neto.mp3');
-  audio.value.loop = true;
+  if (!audio.value) return;
 
   audioButton.value?.addEventListener('click', () => {
     if (!audio.value) return;
@@ -32,29 +32,10 @@ onMounted(() => {
       audio.value.pause();
       isPlaying.value = false;
     }
-  })
+  });
 
-  try {
-    const playPromise = audio.value.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          isPlaying.value = true;
-        })
-        .catch(error => {
-          console.log('Autoplay prevented:', error);
-          document.addEventListener('click', () => {
-            audio.value?.play()
-              .then(() => {
-                isPlaying.value = true;
-              })
-              .catch(console.error);
-          }, { once: true });
-        });
-    }
-  } catch (error) {
-    console.error('Error initializing audio:', error);
-  }
-})
+  document.addEventListener('DOMContentLoaded', () => {
+    audioButton.value?.click();
+  });
+});
 </script>

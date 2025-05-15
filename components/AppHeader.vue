@@ -3,8 +3,8 @@
         <NuxtImg 
             src="/ferrerinha-logo.svg"
             alt="10 Gols do Ferrerinha"
-            width="300"
-            height="80"
+            width="200"
+            height="50"
             class="sm:hidden md:block"
         />
         <NuxtImg 
